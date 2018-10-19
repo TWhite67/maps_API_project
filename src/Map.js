@@ -1,10 +1,32 @@
 import React, { Component } from 'react';
+import Marker from './Marker' 
+
 
 class Map extends Component {
   constructor(props) {
     super(props)
     this.mapDiv = React.createRef()
+
+    this.state = {
+      currentLocation: {lat: 33.522359, lng: -112.064559}
+    }
   }
+
+  renderChildren() {
+    const {children} = this.props;
+
+    if (!children) return;
+
+    return React.Children.map(children, c => {
+      return React.cloneElement(c, {
+        map: this.map,
+        google: this.props.google,
+        mapCenter: this.state.currentLocation
+      });
+    })
+  }
+
+  
   componentDidMount() {
     window.initMap = () => {
       console.log("made it here")
@@ -17,7 +39,8 @@ class Map extends Component {
   render() {
     return (
       <div className="Map" ref={this.mapDiv}>
-        I am Map
+        Loading Map
+        {this.renderChildren()}
       </div>
     );
   }
